@@ -1,0 +1,75 @@
+:root {
+  --color-main: #333;
+  align-items: center;
+  justify-content: center;
+  display:block;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--color-main);
+}
+
+.game {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  /*border: 1px solid green;*/
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 50 0 50 0;
+}
+
+.box-shell {
+  border: 3px solid black;
+  display: flex;
+} 
+
+.nine-block {
+  border: 1px solid black;
+  display: flex;  
+}
+
+.row-block {
+  display: inline-block;
+}
+
+.row {
+  display: inline-block;
+}
+
+.cell {
+  outline: none;
+  border: 1px solid gray;
+  width: 2.5rem;
+  height: 2.5rem;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  line-height: normal;
+  vertical-align: middle;
+}
+
+.buttonPanel {
+  padding: 50px 0px;
+  margin: 0px 100px 0px 100px;
+  align-items: center;
+  display: grid;
+}
+
+.numberButton {
+  background-color: #eee;
+  border: thin solid #ddd;
+  height: 30px;
+  width: 115px;
+  margin: 40px;
+}
