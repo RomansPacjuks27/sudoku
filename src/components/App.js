@@ -5,7 +5,6 @@ const Game = () => {
   return (
     <div key="Game" className="game">
       <GameField key="GameField"/>
-      <ButtonPanel key="ButtonPanel"/>
     </div>
   )
 }
@@ -14,9 +13,9 @@ const GameField = () => {
   const [cellState, setCellState] = React.useState(0);
   const [cellValues, setCellValues] = React.useState({});
 
-  const getKey = (x, y, col, row) => {
-    let id = 3*(y-1)+x; //solver.rc2i(x, y); 
-    return id + '-' + col + row;
+  const getKey = (x, y, row, col) => {
+    let id =  9 * (3*(y-1) + row-1) + 3*(x-1) + col-1;  
+    return id; 
   }
 
   const handleClick = (key) => {
@@ -24,13 +23,13 @@ const GameField = () => {
   }
 
   const getCellValue = (key) => {
-    return cellValues[key];
+    return (cellValues && cellValues[key]) ? solver.b2d(cellValues[key]) : "";
   }
 
   const handleInput = (newkey, event) => {
     if(utils.isPlayingNumber(event.key)){
       setCellValues(prevValues => ({
-        ...prevValues, [newkey]: event.key
+        ...prevValues, [newkey]: solver.d2b(event.key)
       }));
     }
     
@@ -42,26 +41,34 @@ const GameField = () => {
     return key == cellState ? 1 : 0;
   }
 
+  const setInitialValues = () => {
+    let [startingBoard, solvedBoard] = solver.newStartingBoard();
+    setCellValues(startingBoard);
+  }
+
   return (
-    <div key="box" className="box">
-      <div key="box-shell" className="box-shell">
-        {utils.range(1, 3).map(x =>
-          <div key={'row-block' + x} className="row-block"> 
-            {utils.range(1, 3).map(y => 
-              <div key={'nine-block' + y} className="nine-block">
-                {utils.range(1, 3).map(row => 
-                  <div key={'row' + row} className="row">
-                    {utils.range(1, 3).map(col => {
-                        const cellKey = getKey(x, y, col, row);
-                        return <Cell onKeyPress={handleInput} onClick={handleClick} cellValue={getCellValue(cellKey)} cellStatus={isCellClicked(cellKey)} number={cellKey} key={cellKey} />
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
+    <div>
+      <div key="box" className="box">
+        <div key="box-shell" className="box-shell">
+          {utils.range(1, 3).map(x =>
+            <div key={'row-block' + x} className="row-block"> 
+              {utils.range(1, 3).map(y => 
+                <div key={'nine-block' + y} className="nine-block">
+                  {utils.range(1, 3).map(col => 
+                    <div key={'col' + col} className="col">
+                      {utils.range(1, 3).map(row => {
+                          const cellKey = getKey(x, y, row, col);
+                          return <Cell onKeyPress={handleInput} onClick={handleClick} cellValue={getCellValue(cellKey)} cellStatus={isCellClicked(cellKey)} number={cellKey} key={cellKey} />
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
+      <ButtonPanel key="ButtonPanel" randomizePuzzle={setInitialValues}/>
     </div>
   )
 }
@@ -70,13 +77,8 @@ const Cell = props => {
   return <input value={props.cellValue}  style={{backgroundColor: props.cellStatus  > 0 ? 'lightblue' : 'white' }} type="button" onClick={() => props.onClick(props.number)} onKeyDown={(e) => props.onKeyPress(props.number, e)} className="cell"></input>
 }
 
-const ButtonPanel = () => {
+const ButtonPanel = props => {
   const [board, setBoard] = React.useState({});
-
-  const randomizePuzzle = () => {
-    solver.fillRandomCells();
-  }
-
   const solvePuzzle = () => {
 
   }
@@ -87,7 +89,7 @@ const ButtonPanel = () => {
         {/* {utils.range(1, 9).map(y => 
           <ButtonNumber onClick={onNumberClick} key={y} number={y} status={numberStatus(y)} />
         )} */}
-          <button className="numberButton" onClick={randomizePuzzle}>New Game</button>
+          <button className="numberButton" onClick={props.randomizePuzzle}>New Game</button>
           <button className="numberButton" onClick={solvePuzzle}>Solve</button>
       </div>
     </div>
@@ -121,42 +123,55 @@ const solver = {
     return 1 << (digit - 1);
   },
 
-  fillRandomCells() {
-    //select random cell count for filling the grid
-    //check what number is safe to put in each of these cells
-    //if some cells run out of any possible safe numbers, start randomizing board again.
-    //when filled, pass board to solve function to see if it does have solution,
-    //if it doesn't start randomizing board again.
-    //if it does, generate board to ui
-    let board = new Array(81).fill(0);
-    let filledCellCount = utils.random(14, 24);
-    for(let i = 0; i < filledCellCount; i++) {
-      let rndRow = utils.random(0, 8);
-      let rndCol = utils.random(0, 8);
-      let idx = this.rc2i(rndRow, rndCol);
+  b2d(digit) {
+    return (solver.getBaseLog(2, digit)) + 1;
+  },
 
-      while (board[idx]) {
-        rndRow = utils.random(0, 8);
-        rndCol = utils.random(0, 8);
-        idx = this.rc2i(rndRow, rndCol);
-      }
+  getBaseLog(x, y) {
+    return Math.log(y) / Math.log(x);
+  },
 
-      let rndNumber = utils.random(1, 9);
-      while(!this.acceptable(board, idx, rndNumber)) {
-        rndNumber = utils.random(1, 9);
-      }
+  fillPuzzle(board) {
+    let resultingBoard = new Array(81).fill(0);
+    let allowed = new Array(81).fill(0);
+    do {
+      resultingBoard = new Array(81).fill(0);
+      board.map((x, idx) => board[idx] = 0);
 
-      board[idx] = rndNumber;
-    }
+        let numbers = [1,2,3,4,5,6,7,8,9];
+        for(let c = 2; c < 5; c++)
+        {
+          for(let r = 2; r < 5; r++)
+          {
+            let rndNumber = utils.random(0, numbers.length - 1);
+            board[this.rc2i(r, c)] = numbers[rndNumber];
+            numbers.splice(rndNumber, 1);
+          }
+        }
 
-    if(this.solve(board)) {
-      //board.map(x => x.value ? d2b(parseInt(x.value, 10)) : 0);
-    }
-    else{
-    }
-    //for (let r = r1; r < r1 + 3; ++r) {
-      //for (let c = c1; c < c1 + 3; ++c, ++ir, ic += 9) {
+        for(let i = 0; i < 80; i++)
+        {
+          if(!board[i]) {
+            let cellMoves = this.getMoves(board, i);
+            for (let m = 1; cellMoves; m <<= 1) {
+              if (cellMoves & m) {
+                allowed[i] += 1;
+                cellMoves ^= m;
+              }
+            }
+          }
+        }
 
+      console.log("Cells with 9 allowed moves: ", allowed.filter(x => allowed[x] == 9).length, 
+      "\nCells with 8 allowed moves: ", allowed.filter(x => allowed[x] == 8).length,
+      "\nCells with 7 allowed moves: ", allowed.filter(x => allowed[x] == 7).length,
+      "\nCells with 6 allowed moves: ", allowed.filter(x => allowed[x] == 6).length,
+      "\nCells with 5 allowed moves: ", allowed.filter(x => allowed[x] == 5).length,
+      "\nCells with 4 allowed moves: ", allowed.filter(x => allowed[x] == 4).length);
+      
+      resultingBoard = solver.solve(board);
+    } while(resultingBoard == null)
+    return resultingBoard;
   },
 
   getMoves(board, index) {
@@ -216,11 +231,9 @@ const solver = {
   },
 
   analyze(board) {
-    console.log(board);
     let allowed = board.map((x, i) => x ? 0 : this.getMoves(board, i));
     let bestIndex, bestLen = 100;
     for (let i = 0; i < 81; i++) {
-      console.log(board[i]);
       if (board[i] == 0) {
         let moves = allowed[i];
         let len = 0;
@@ -257,32 +270,42 @@ const solver = {
 
   solve(initboard) {
     let self = this;
-    let el = self.container;
     let board = self.readBoard(initboard, false);
     let backtrack = 0;
     let guesswork = 0;
     let dcount = 0;
     let time = Date.now();
-    if (solve()) {
-        stats();
-        //self.writeBytes(board);
-        //el.classList.add("solved");
-        alert("solved");
-        console.log(board);
+    let result = solve(false);
+    if (result === true) {
+        //stats();
+        return board;
     } else {
-        stats();
-        alert("no solution");
+        //stats();
+        board = [];
+        return null;
     }
-    function solve() {
+    function solve(abrupt = false) {
         let { index, moves, len } = self.analyze(board);
-        console.log("{index, moves, len} is: ", {index, moves, len});
+        if(abrupt)
+          return false;
+        if(Date.now() - time > 1000)
+        {
+          board = [];
+          return -1;
+        }
         if (index == null) return true;
         if (len > 1) guesswork++;
         for (let m = 1; moves; m <<= 1) {
             if (moves & m) {
                 dcount++;
                 board[index] = m;
-                if (solve()) return true;
+                let res = solve();  
+                if (res) return true;
+                if (res == -1) {
+                  board[index] = 0;
+                  abrupt = true;
+                 return false;
+                }
                 moves ^= m;
             }
         }
@@ -291,43 +314,40 @@ const solver = {
         return false;
     }
     function stats() {
-        console.log(`${dcount} digits placed<br>${backtrack} take-backs<br>${guesswork} guesses<br>${Date.now() - time} milliseconds`);
+        console.log(`${dcount} digits placed\n${backtrack} take-backs\n${guesswork} guesses\n${Date.now() - time} milliseconds\n`);
     }
   },
 
-
-  // different source code for generating random boards (under)
-
-  newStartingBoard  (holes) {
+  newStartingBoard  () {
     // Reset global iteration counter to 0 and Try to generate a new game. 
     // If counter reaches its maximum limit in the fillPuzzle function, current attemp will abort
     // To prevent the abort from crashing the script, the error is caught and used to re-run
     // this function
     try {
-      counter = 0
-      let solvedBoard = newSolvedBoard();
-  
-      // Clone the populated board and poke holes in it. 
-      // Stored the removed values for clues
-      let [removedVals, startingBoard] = pokeHoles( solvedBoard.map ( row => row.slice() ), holes)
-  
-      return [removedVals, startingBoard, solvedBoard]
-      
+      let solvedBoard = this.newSolvedBoard();
+      let startingBoard = this.pokeHoles(solvedBoard);
+      return [startingBoard, solvedBoard];
     } catch (error) {
-      return newStartingBoard(holes)
+      console.log(error);
     }
   },
 
   newSolvedBoard() {
-    const newBoard = BLANK_BOARD.map(row => row.slice() ) // Create an unaffiliated clone of a fresh board
-    fillPuzzle(newBoard) // Populate the board using backtracking algorithm
-    return newBoard;
+    const newBoard = BLANK_BOARD; 
+    return this.fillPuzzle(newBoard); 
   },
 
   safeToPlace( puzzleArray, emptyCell, num) {
     return rowSafe(puzzleArray, emptyCell, num) && 
     colSafe(puzzleArray, emptyCell, num) && 
     boxSafe(puzzleArray, emptyCell, num) 
+  },
+
+  pokeHoles(board) {
+    var holeCount = utils.random(35,45);
+    var pokedIdx = utils.randomSeries(0, 80, holeCount);
+    pokedIdx.map(x => board[x] = 0);
+    return board;
   }
 
 };
@@ -347,6 +367,21 @@ const utils = {
   // pick a random number between min and max (edges included)
   random: (min, max) => min + Math.floor(Math.random() * (max - min + 1)),
 
+  randomSeries: (min, max, count) => {
+    let arr = [];
+    let num = 0;
+    while(count)
+    {
+      num = min + Math.floor(Math.random() * (max - min + 1));
+      if(!arr.includes(num))
+      {
+        arr.push(num);
+        count--;
+      }
+    }
+    return arr;
+  },
+
   isPlayingNumber: (str) => {
     if (str.trim() === '') {
       return false;
@@ -355,5 +390,7 @@ const utils = {
     return !isNaN(str) && str != 0;
   }
 };
+
+const BLANK_BOARD = new Array(81).fill(0);
 
 export {Game as App};
