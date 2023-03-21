@@ -12,30 +12,54 @@ const Game = () => {
 const GameField = () => {
   const [cellState, setCellState] = React.useState(0);
   const [cellValues, setCellValues] = React.useState({});
+  const cellStateRef = React.useRef(cellState);
+  const setCurrentCell = data => {
+    cellStateRef.current = data;
+    setCellState(data);
+  };
+
+  React.useEffect(() =>
+  {
+    window.addEventListener('keydown', keyboardEventListener);
+    return () =>
+      {
+        window.removeEventListener('keydown', keyboardEventListener);
+      }
+  }, []);
+
+  const keyboardEventListener = event => {
+      if (utils.isPlayingNumber(event.key)) {
+        setCellValues(prevValues => ({
+          ...prevValues, [cellStateRef.current]: solver.d2b(event.key)
+        }));
+      }
+      else if(event.code == 'ArrowRight' && ((cellStateRef.current+1) % 9 > 0 || cellStateRef.current < 8)) {
+        setCurrentCell(cellStateRef.current + 1);
+      }
+      else if(event?.code == 'ArrowLeft' && cellStateRef.current % 9 > 0) {
+        setCurrentCell(cellStateRef.current - 1);
+      }
+      else if(event?.code == 'ArrowDown' && cellStateRef.current < 72) {
+        setCurrentCell(cellStateRef.current + 9);
+      }
+      else if(event?.code == 'ArrowUp' && cellStateRef.current > 8) {
+        setCurrentCell(cellStateRef.current - 9);
+      }
+    }
 
   const getKey = (x, y, row, col) => {
     let id =  9 * (3*(y-1) + row-1) + 3*(x-1) + col-1;  
     return id; 
   }
-
+  
   const handleClick = (key) => {
-    setCellState(key);
+    setCurrentCell(key);
   }
 
   const getCellValue = (key) => {
     return (cellValues && cellValues[key]) ? solver.b2d(cellValues[key]) : "";
   }
 
-  const handleInput = (newkey, event) => {
-    if(utils.isPlayingNumber(event.key)){
-      setCellValues(prevValues => ({
-        ...prevValues, [newkey]: solver.d2b(event.key)
-      }));
-    }
-    
-    event.preventDefault();
-    event.stopPropagation();
-  }
 
   const isCellClicked = (key) => {
     return key == cellState ? 1 : 0;
@@ -47,7 +71,7 @@ const GameField = () => {
   }
 
   return (
-    <div>
+    <div tabIndex="0">
       <div key="box" className="box">
         <div key="box-shell" className="box-shell">
           {utils.range(1, 3).map(x =>
@@ -58,7 +82,7 @@ const GameField = () => {
                     <div key={'col' + col} className="col">
                       {utils.range(1, 3).map(row => {
                           const cellKey = getKey(x, y, row, col);
-                          return <Cell onKeyPress={handleInput} onClick={handleClick} cellValue={getCellValue(cellKey)} cellStatus={isCellClicked(cellKey)} number={cellKey} key={cellKey} />
+                          return <Cell onClick={handleClick} cellValue={getCellValue(cellKey)} cellStatus={isCellClicked(cellKey)} number={cellKey} key={cellKey} />
                       })}
                     </div>
                   )}
@@ -74,7 +98,7 @@ const GameField = () => {
 }
 
 const Cell = props => {
-  return <input value={props.cellValue}  style={{backgroundColor: props.cellStatus  > 0 ? 'lightblue' : 'white' }} type="button" onClick={() => props.onClick(props.number)} onKeyDown={(e) => props.onKeyPress(props.number, e)} className="cell"></input>
+  return <input value={props.cellValue}  style={{backgroundColor: props.cellStatus  > 0 ? 'lightblue' : 'white' }} type="button" onClick={() => props.onClick(props.number)} className="cell"></input>
 }
 
 const ButtonPanel = props => {
