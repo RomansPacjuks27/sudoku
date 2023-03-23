@@ -16,10 +16,17 @@ body {
 }
 
 .game {
-  display: grid;
   align-items: center;
   justify-content: center;
+  margin: 50px;
   /*border: 1px solid green;*/
+}
+
+.gameLayout {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  align-items: center;
+  justify-content: center;
 }
 
 .box {
@@ -48,28 +55,100 @@ body {
 }
 
 .cell {
+  background-color: #fff;
   outline: none;
   border: 1px solid gray;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
   justify-content: center;
   align-items: center;
   display: flex;
   line-height: normal;
   vertical-align: middle;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 2rem;
+}
+
+.cellactive {
+  background-color: #FFC400;
+  outline: none;
+  border: 1px solid gray;
+  width: 3.5rem;
+  height: 3.5rem;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  line-height: normal;
+  vertical-align: middle;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 2rem;
+}
+
+.cellpredefined {
+  background-color: #C9D6DF;
+  outline: none;
+  border: 1px solid gray;
+  width: 3.5rem;
+  height: 3.5rem;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  line-height: normal;
+  vertical-align: middle;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 2rem;
 }
 
 .buttonPanel {
-  padding: 50px 0px;
-  margin: 0px 100px 0px 100px;
+  margin: 25px;
   align-items: center;
   display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+.numberButtons {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px solid;
+  border-color: #C9D6DF;
+  border-radius: 12px;
+  margin: 10px 0px;
+  padding: 0px;
 }
 
 .numberButton {
-  background-color: #eee;
+  background-color: #C9D6DF;
   border: thin solid #ddd;
-  height: 30px;
-  width: 115px;
-  margin: 40px;
+  height: 70px;
+  width: 70px;
+  margin: 5px;
+  border-radius: 12px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.mainButtons {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  align-items: center;
+  justify-content: center;
+  place-items: center;
+}
+
+.mainButton {
+  background-color: #C9D6DF;
+  height: 40px;
+  width: 110px;
+  margin: 2px;
+  border: 0px;
+  border-radius: 10px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: #000;
+  font-weight: bold;
+  font-size: 0.85rem;
 }
