@@ -5,13 +5,17 @@ import { solver } from './Solver';
 
 export const GameField = () => {
     const [cellState, setCellState] = React.useState(0);
-    const [cellValues, setCellValues] = React.useState({});
-    const predefinedCells = React.useRef([]);
+    const [cellValues, setCellValues] = React.useState(utils.BLANK_BOARD);
+    const predefinedCells = React.useRef([]); 
     const cellStateRef = React.useRef(cellState);
     const setCurrentCell = data => {
       cellStateRef.current = data;
       setCellState(data);
     };
+
+    React.useEffect(() => {
+      checkIfBoardIsFilled();
+    }, [cellValues]);
   
     React.useEffect(() =>
     {
@@ -22,28 +26,49 @@ export const GameField = () => {
         }
     }, []);
 
+    const checkIfBoardIsFilled = () => {
+      if(cellValues.every((x, idx) => cellValues[idx] && solver.acceptable(cellValues, idx, x))) {
+        setTimeout(() => alert('Solved!'), 100);
+      }
+    }
+
     const keyboardEventListener = event => {
-        if (!predefinedCells.current[cellStateRef.current] && utils.isPlayingNumber(event.key)) {
-          setCellValues(prevValues => ({
-            ...prevValues, [cellStateRef.current]: solver.d2b(event.key)
-          }));
+        if (!predefinedCells.current[cellStateRef.current])
+        {
+          if (utils.isPlayingNumber(event.key)) {
+            setCellValues((prev) => {
+              return [
+                ...prev.slice(0, cellStateRef.current),
+                solver.d2b(event.key),
+                ...prev.slice(cellStateRef.current + 1, 81)
+              ];
+            })
+          }
+          else if (event?.code == "Backspace" || event?.code == "Delete") {
+            setCellValues((prev) => {
+              return [
+                ...prev.slice(0, cellStateRef.current),
+                0,
+                ...prev.slice(cellStateRef.current + 1, 81)
+              ];
+            })
+          }
         }
 
-        if(event.code == 'ArrowRight' && ((cellStateRef.current+1) % 9 > 0 || cellStateRef.current < 8)) {
+        if (event.code == 'ArrowRight' && ((cellStateRef.current+1) % 9 > 0 || cellStateRef.current < 8)) {
           setCurrentCell(cellStateRef.current + 1);
         }
-        else if(event?.code == 'ArrowLeft' && cellStateRef.current % 9 > 0) {
+        else if (event?.code == 'ArrowLeft' && cellStateRef.current % 9 > 0) {
           setCurrentCell(cellStateRef.current - 1);
         }
-        else if(event?.code == 'ArrowDown' && cellStateRef.current < 72) {
+        else if (event?.code == 'ArrowDown' && cellStateRef.current < 72) {
           setCurrentCell(cellStateRef.current + 9);
         }
-        else if(event?.code == 'ArrowUp' && cellStateRef.current > 8) {
+        else if (event?.code == 'ArrowUp' && cellStateRef.current > 8) {
           setCurrentCell(cellStateRef.current - 9);
         }
 
         event.stopPropagation();
-        event.preventDefault();
       }
   
     const getKey = (x, y, row, col) => {
@@ -56,16 +81,23 @@ export const GameField = () => {
     }
 
     const setNumberInCell = (number) => {
-      setCellValues(prevValues => ({
-        ...prevValues, [cellStateRef.current]: solver.d2b(number)
-      }));
+      if(!predefinedCells.current[cellStateRef.current])
+      {
+        setCellValues((prev) => {
+          return [
+            ...prev.slice(0, cellStateRef.current),
+            solver.d2b(number),
+            ...prev.slice(cellStateRef.current + 1, 81)
+          ];
+        });
+      }
     }
   
     const getCellValue = (key) => {
       return (cellValues && cellValues[key]) ? solver.b2d(cellValues[key]) : "";
     }
   
-    const isCellClicked = (key) => {
+    const setCellStatus = (key) => {
       if (key == cellState) 
         return "active";
       else if (predefinedCells.current[key])
@@ -98,7 +130,7 @@ export const GameField = () => {
                         <div key={'col' + col} className="col">
                           {utils.range(1, 3).map(row => {
                               const cellKey = getKey(x, y, row, col);
-                              return <Cell onClick={handleClick} cellValue={getCellValue(cellKey)} cellStatus={isCellClicked(cellKey)} number={cellKey} key={cellKey} />
+                              return <Cell onClick={handleClick} cellValue={getCellValue(cellKey)} cellStatus={setCellStatus(cellKey)} number={cellKey} key={cellKey} />
                           })}
                         </div>
                       )}

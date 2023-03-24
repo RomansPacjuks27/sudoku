@@ -121,7 +121,8 @@ body {
 
 .numberButton {
   background-color: #C9D6DF;
-  border: thin solid #ddd;
+  border: none;
+  outline: none;
   height: 70px;
   width: 70px;
   margin: 5px;
@@ -141,11 +142,12 @@ body {
 }
 
 .mainButton {
+  outline: none;
   background-color: #C9D6DF;
   height: 40px;
   width: 110px;
   margin: 2px;
-  border: 0px;
+  border: none;
   border-radius: 10px;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color: #000;

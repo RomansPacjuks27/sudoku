@@ -110,14 +110,16 @@ export const solver = {
     acceptable(board, index, value) {
       let { row, col } = this.i2rc(index);
       for (let i = 0; i < 9; ++i) {
-          if (board[this.rc2i(i, col)] == value || board[this.rc2i(row, i)] == value)
-              return false;
+          if ((i != row && board[this.rc2i(i, col)] == value) || 
+              (i != col && board[this.rc2i(row, i)] == value)) 
+                return false;
       }
       let r1 = Math.floor(row / 3) * 3;
       let c1 = Math.floor(col / 3) * 3;
       for (let r = r1; r < r1 + 3; ++r) {
           for (let c = c1; c < c1 + 3; ++c) {
-              if (board[this.rc2i(r, c)] == value) return false;
+              if ((r != row && c != col) && board[this.rc2i(r, c)] == value)  
+                return false;
           }
       }
       return true;
