@@ -26,9 +26,9 @@ const config = {
         },
       },
       {
-        test: /\.css$/,
+        test: /\.(css|scss|sass)$/,
         exclude: /node_modules/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: ['css-loader', 'style-loader', 'sass-loader'],
       },
     ],
   },

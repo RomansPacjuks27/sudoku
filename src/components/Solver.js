@@ -54,13 +54,6 @@ export const solver = {
               }
             }
           }
-  
-        console.log("Cells with 9 allowed moves: ", allowed.filter(x => allowed[x] == 9).length, 
-        "\nCells with 8 allowed moves: ", allowed.filter(x => allowed[x] == 8).length,
-        "\nCells with 7 allowed moves: ", allowed.filter(x => allowed[x] == 7).length,
-        "\nCells with 6 allowed moves: ", allowed.filter(x => allowed[x] == 6).length,
-        "\nCells with 5 allowed moves: ", allowed.filter(x => allowed[x] == 5).length,
-        "\nCells with 4 allowed moves: ", allowed.filter(x => allowed[x] == 4).length);
         
         resultingBoard = solver.solve(board);
       } while(resultingBoard == null)
@@ -239,7 +232,7 @@ export const solver = {
     },
   
     pokeHoles(board) {
-      var holeCount = utils.random(35,45);
+      var holeCount = utils.random(5,7);
       var pokedIdx = utils.randomSeries(0, 80, holeCount);
       pokedIdx.map(x => board[x] = 0);
       return board;

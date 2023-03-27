@@ -121,13 +121,13 @@ body {
 
 .numberButton {
   background-color: #C9D6DF;
-  border: none;
-  outline: none;
+  /*border: none;
+  outline: none;*/
   height: 70px;
   width: 70px;
   margin: 5px;
   border-radius: 12px;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  /*font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; */
   color: #000;
   font-weight: bold;
   font-size: 1.5rem;
@@ -139,18 +139,25 @@ body {
   align-items: center;
   justify-content: center;
   place-items: center;
+  gap: 4px;
 }
 
 .mainButton {
-  outline: none;
+  /*outline: none;*/
   background-color: #C9D6DF;
-  height: 40px;
-  width: 110px;
-  margin: 2px;
-  border: none;
+  /*height: 40px;
+  width: 110px;*/
+  width: 100%;
+  /*margin: 2px;*/
+  /*border: none;
   border-radius: 10px;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color: #000;
   font-weight: bold;
-  font-size: 0.85rem;
+  font-size: 0.85rem;*/
+}
+
+.longButton {
+  grid-column: 1/3;
+  width: 100%;
 }

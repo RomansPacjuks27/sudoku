@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { utils, colors } from './Utils';
+import { utils } from './Utils';
+import Button from 'react-bootstrap/Button';
 
 export const ButtonPanel = props => {
   
@@ -11,8 +12,9 @@ export const ButtonPanel = props => {
           )}
         </div>
         <div className="mainButtons">
-          <button className="mainButton" onClick={props.newGame}>New Game</button>
-          <button className="mainButton" onClick={props.resetGame}>Reset</button>
+          <button type="button" className="mainButton btn btn-outline-primary">Hint</button>
+          <button type="button" className="mainButton btn btn-outline-primary" onClick={props.resetGame}>Reset</button>
+          <button type="button" className="longButton btn btn-primary" onClick={props.newGame}>New Game</button>
         </div>
       </div>
     )
