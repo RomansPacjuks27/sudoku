@@ -2,10 +2,12 @@ import * as React from 'react';
 import { utils } from './Utils';
 import { ButtonPanel } from './Controls';
 import { solver } from './Solver';
+import { ModalComponent } from './bootstrap-components/Modal';
 
 export const GameField = () => {
     const [cellState, setCellState] = React.useState(0);
     const [cellValues, setCellValues] = React.useState(utils.BLANK_BOARD);
+    const [showSolved, setShowSolved] = React.useState(false);
     const predefinedCells = React.useRef([]); 
     const cellStateRef = React.useRef(cellState);
     const setCurrentCell = data => {
@@ -27,8 +29,15 @@ export const GameField = () => {
     }, []);
 
     const checkIfBoardIsFilled = () => {
-      if(cellValues.every((x, idx) => cellValues[idx] && solver.acceptable(cellValues, idx, x))) {
-        setTimeout(() => alert('Solved!'), 100);
+      if(cellValues.length == 81 && cellValues.every((x, idx) => cellValues[idx] != 0 && solver.acceptable(cellValues, idx, x))) {
+        setShowSolved(true);
+      }
+    }
+
+    const onSolvedClicked = (result) => {
+      setShowSolved(false);
+      if(result) {
+        setInitialValues();
       }
     }
 
@@ -113,13 +122,23 @@ export const GameField = () => {
     }
 
     const resetGameBoard = () => {
-      setCellValues(predefinedCells.current);
+      if(predefinedCells) {
+        setCellValues(predefinedCells.current);
+      }
     }
   
     return (
       <div className="gameLayout">
         <div className="leftPanel"></div>
         <div className="gameField">
+          <ModalComponent 
+            showModal={showSolved} 
+            onButtonClick={onSolvedClicked} 
+            title="Congratulations!" 
+            text="You solved the puzzle!" 
+            button1text="Start new Game" 
+            button2text="Later">
+          </ModalComponent>
           <div key="box" className="box">
             <div key="box-shell" className="box-shell">
               {utils.range(1, 3).map(x =>
