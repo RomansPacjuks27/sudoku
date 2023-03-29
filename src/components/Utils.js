@@ -31,5 +31,6 @@ export const utils = {
       return !isNaN(str) && str != 0;
     },
     
-    BLANK_BOARD: Array(81).fill(0)
+    BLANK_BOARD: Array(81).fill(0),
+    BLANK_CANDIDATE_BOARD: Array(81).fill(Array(9).fill(false))
   };

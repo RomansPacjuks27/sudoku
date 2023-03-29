@@ -207,10 +207,6 @@ export const solver = {
     },
   
     newStartingBoard  () {
-      // Reset global iteration counter to 0 and Try to generate a new game. 
-      // If counter reaches its maximum limit in the fillPuzzle function, current attemp will abort
-      // To prevent the abort from crashing the script, the error is caught and used to re-run
-      // this function
       try {
         let solvedBoard = this.newSolvedBoard();
         let startingBoard = this.pokeHoles(solvedBoard);
@@ -232,10 +228,9 @@ export const solver = {
     },
   
     pokeHoles(board) {
-      var holeCount = utils.random(5,7);
+      var holeCount = utils.random(45, 55);
       var pokedIdx = utils.randomSeries(0, 80, holeCount);
       pokedIdx.map(x => board[x] = 0);
       return board;
     }
-  
   };

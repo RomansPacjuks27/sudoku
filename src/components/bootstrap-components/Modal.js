@@ -6,7 +6,7 @@ export const ModalComponent = props => {
   
     return (
         <div>
-            <Modal show={props.showModal}>
+            <Modal show={props.showModal} centered>
             <Modal.Header closeButton>
                 <Modal.Title>{props.title}</Modal.Title>
             </Modal.Header>

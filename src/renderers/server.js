@@ -5,11 +5,11 @@ import { App } from 'components/App';
 
 export async function serverRenderer() {
   const initialData = {
-    appName: 'Reactful',
+    appName: 'Sudoku',
   };
 
   const pageData = {
-    title: `Hello ${initialData.appName}`,
+    title: initialData.appName,
   };
 
   return Promise.resolve({

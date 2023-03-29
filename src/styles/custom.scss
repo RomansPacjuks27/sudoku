@@ -5,5 +5,328 @@ $primary: #C9D6DF;
 $theme-colors: (
   "primary": $primary
 );
-  
+
+:root {
+  --color-main: #333;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  display: grid;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--color-main);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
+
+.game {
+  align-items: center;
+  justify-content: center;
+  margin: 50px;
+  /*border: 1px solid green;*/
+}
+
+.gameLayout {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 50 0 50 0;
+}
+
+.box-shell {
+  border: 3px solid black;
+  display: flex;
+} 
+
+.nine-block {
+  border: 1px solid black;
+  display: flex;  
+}
+
+.row-block {
+  display: inline-block;
+}
+
+.row {
+  display: inline-block;
+}
+
+.candidateBox {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto auto;
+  place-items: center;
+  background-color: #fff;
+  outline: none;
+  border: 1px solid gray;
+  width: 3.5rem;
+  height: 3.5rem;
+  align-items: center;
+  vertical-align: middle;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.candidateBoxactive {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto auto;
+  place-items: center;
+  background-color: #FFC400;
+  outline: none;
+  border: 1px solid gray;
+  width: 3.5rem;
+  height: 3.5rem;
+  align-items: center;
+  vertical-align: middle;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.candidateCell {
+  color: black;
+  background-color: #fff;
+  outline: none;
+  border: none;
+  width: 16px;
+  height: 16px;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 0.75rem;
+}
+
+.candidateCellactive {
+  background-color: #FFC400;
+  color: black;
+  outline: none;
+  border: none;
+  width: 16px;
+  height: 16px;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 0.75rem;
+}
+
+.cell {
+  background-color: #fff;
+  outline: none;
+  border: 1px solid gray;
+  width: 3.5rem;
+  height: 3.5rem;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  line-height: normal;
+  vertical-align: middle;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 2rem;
+}
+
+.cellactive {
+  background-color: #FFC400;
+  outline: none;
+  border: 1px solid gray;
+  width: 3.5rem;
+  height: 3.5rem;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  line-height: normal;
+  vertical-align: middle;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 2rem;
+}
+
+.cellpredefined {
+  background-color: #C9D6DF;
+  outline: none;
+  border: 1px solid gray;
+  width: 3.5rem;
+  height: 3.5rem;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  line-height: normal;
+  vertical-align: middle;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 2rem;
+}
+
+.buttonPanel {
+  margin: 25px;
+  align-items: center;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+.modeButtons {
+  display: block;
+}
+
+.modeButton {
+    background-color: #fff!important;
+    color: black;
+    font-size: 14px;
+    width: 50%;
+    height: 38px;
+    text-align: center;
+    border: 1px solid #ccc!important;
+    border-radius: 0!important;
+    cursor: pointer;
+}
+
+.modeButton.left {
+    border-top-left-radius: 5px!important;
+    border-bottom-left-radius: 5px!important;
+    border-right: none!important;
+}
+
+.modeButton.right {
+  border-top-right-radius: 5px!important;
+  border-bottom-right-radius: 5px!important;
+  border-left: none!important;
+  background-color: white!important;
+}
+
+.modeButton.selected {
+  background-color: #C9D6DF!important;
+  color:#000!important;
+  border: none!important;
+}
+
+.candidateButtons {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px solid;
+  border-color: #C9D6DF;
+  border-radius: 12px;
+  margin: 10px 0px;
+  padding: 0px;
+}
+
+.candidateButton {
+  background-color: #fff;
+  /*border: none;*/
+  outline: none;
+  height: 70px;
+  width: 70px;
+  margin: 5px;
+  border-radius: 12px;
+  /*font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; */
+  color: #000;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border: 2px solid #C9D6DF;
+}
+
+.numcol-0 {
+  position: relative;
+  left: -33.3%;
+}
+
+.numcol-1 {
+  position: relative;
+}
+
+.numcol-2 {
+  position: relative;
+  right: -33.3%;
+}
+
+.numrow-0 {
+  position: relative;
+  top: -33.3%;
+}
+
+.numrow-1 {
+  position: relative;
+}
+
+.numrow-2 {
+  position: relative;
+  bottom: -33.3%;
+}
+
+.numberButtons {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px solid;
+  border-color: #C9D6DF;
+  border-radius: 12px;
+  margin: 10px 0px;
+  padding: 0px;
+}
+
+.numberButton {
+  background-color: #C9D6DF;
+  /*border: none;*/
+  outline: none;
+  height: 70px;
+  width: 70px;
+  margin: 5px;
+  border-radius: 12px;
+  /*font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; */
+  color: #000;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.mainButtons {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  align-items: center;
+  justify-content: center;
+  place-items: center;
+  gap: 4px;
+}
+
+.mainButton {
+  outline: none!important;
+  background-color: #C9D6DF;
+  /*height: 40px;
+  width: 110px;*/
+  width: 100%;
+  /*margin: 2px;*/
+  /*border: none;
+  border-radius: 10px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: #000;
+  font-weight: bold;
+  font-size: 0.85rem;*/
+}
+
+.longButton {
+  grid-column: 1/3;
+  width: 100%;
+}
+
 @import "../../node_modules/bootstrap/scss/bootstrap";

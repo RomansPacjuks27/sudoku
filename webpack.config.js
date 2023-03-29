@@ -26,11 +26,32 @@ const config = {
         },
       },
       {
-        test: /\.(css|scss|sass)$/,
-        exclude: /node_modules/,
-        use: ['css-loader', 'style-loader', 'sass-loader'],
+        test: /\.scss$/,
+        use: [
+            {
+              loader: "style-loader"
+            },
+            {
+              loader: "css-loader",
+            },
+            {
+              // Loader for webpack to process CSS with PostCSS
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: () => [
+                    autoprefixer
+                  ]
+                }
+              }
+            },
+            {
+              // Loads a SASS/SCSS file and compiles it to CSS
+              loader: 'sass-loader'
+            }
+        ],
       },
-    ],
+    ]
   },
   optimization: {
     splitChunks: {
