@@ -8,6 +8,7 @@ export const utils = {
     // pick a random number between min and max (edges included)
     random: (min, max) => min + Math.floor(Math.random() * (max - min + 1)),
   
+    // pick 'count' of random and unique numbers between mix and max values
     randomSeries: (min, max, count) => {
       let arr = [];
       let num = 0;

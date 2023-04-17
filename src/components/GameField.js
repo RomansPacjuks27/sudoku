@@ -80,8 +80,10 @@ export const GameField = () => {
         }
       }
       else if (event?.code == "Backspace" || event?.code == "Delete") {
-        assignCells(0);
-        assignCandidates(-1);
+        if(!predefinedCells.current[cellStateRef.current]) {
+          assignCells(0);
+          assignCandidates(-1);
+        }
       }
 
       if (event.code == 'ArrowRight' && ((cellStateRef.current+1) % 9 > 0 || cellStateRef.current < 8)) {
