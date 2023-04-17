@@ -51,25 +51,24 @@ export const solver = {
           }
         });
       
-      console.log(`Filled, solving try: ${solvingTry}`);
       resultingBoard = solver.solve(board);
     } while((resultingBoard == null || resultingBoard.length == 0) && solvingTry < 20)
     return resultingBoard;
   },
 
-  getMoves(board, index) { // 1. algorithm - plain
-    let { row, col } = this.i2rc(index); //row = 1; col = 7
-    let r1 = 3 * (row / 3 | 0); //r1 = 0;
-    let c1 = 3 * (col / 3 | 0); //c1 = 2*3 = 6
+  getMoves(board, index) { 
+    let { row, col } = this.i2rc(index); 
+    let r1 = 3 * (row / 3 | 0); 
+    let c1 = 3 * (col / 3 | 0); 
     let moves = 0;
     for (let r = r1, i = 0; r < r1 + 3; r++) {
         for (let c = c1; c < c1 + 3; c++, i++) {
-            moves |= board[this.rc2i(r, c)] //add any occuring number in cell's 3x3 box
-                | board[this.rc2i(row, i)] //add any occuring number in current cell's row
-                | board[this.rc2i(i, col)]; //add any occuring number in current cell's column
+            moves |= board[this.rc2i(r, c)] 
+                | board[this.rc2i(row, i)] 
+                | board[this.rc2i(i, col)]; 
         }
     }
-    return moves ^ 511; // switch given zeroes to 1 (xor with 8 bits), which are candidates
+    return moves ^ 511; 
   },
 
   unique(allowed, index, value) {
@@ -162,11 +161,8 @@ export const solver = {
     let time = Date.now();
     let result = solve();
     if (result === true) {
-        if(board.length != 0)
-          stats();
         return board;
     } else {
-        //stats();
         board = [];
         return null;
     }
@@ -194,9 +190,6 @@ export const solver = {
       board[index] = 0;
       return false;
   }
-    function stats() {
-        console.log(`${dcount} digits placed\n${backtrack} take-backs\n${guesswork} guesses\n${Date.now() - time} milliseconds\n`);
-    }
   },
 
   newStartingBoard  () {
@@ -219,20 +212,6 @@ export const solver = {
     colSafe(puzzleArray, emptyCell, num) && 
     boxSafe(puzzleArray, emptyCell, num) 
   },
-
-  // 1. option:
-
-  // remove 4-5 holes
-  // and by each iteration find one more hole to remove by doing:
-  // searching a cell that when value removed from will have as more candidates as possible by 1-2 simple techniques (row/column check, sole candidate)
-  // for easy: continue searching for this cell among random 10% cells of all empty cells,
-  // for medium: continue searching for this cell among random 30% cells of all empty cells,
-  // for hard: continue searching for this cell among random 70% cells of all empty cells,
-  //
-  // then recalculate all empty cells' candidate count and and total difficulty,
-  // stop iterations when difficulty level is matched or when hole count is capped at determined number
-
-  //todo: after removing each cell (or after removing all needed cells) check for puzzle solution unicity
 
   pokeHoles(board) {
     let cellStats = [];
@@ -279,7 +258,6 @@ export const solver = {
       dummyBoard[bestToErase] = 0;
       pokedIdx.push(bestToErase);
 
-      // reevaluating all empty cell candidates
       cellStats = [];
       pokedIdx.forEach(i => {
         let len = 0;
