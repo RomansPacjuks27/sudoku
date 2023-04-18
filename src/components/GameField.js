@@ -1,10 +1,12 @@
 import * as React from 'react';
+import * as constants from './Constants';
 import { utils } from './Utils';
 import { ButtonPanel } from './Controls';
 import { solver } from './Solver';
 import { ModalComponent } from './bootstrap-components/Modal';
 
 export const GameField = () => {
+    const [difficultyLevel, setDifficultyLevel] = React.useState(constants.difficulty.easy);
     const [cellState, setCellState] = React.useState(0);
     const [cellValues, setCellValues] = React.useState(utils.BLANK_BOARD);
     const [showSolved, setShowSolved] = React.useState(false);
@@ -111,6 +113,14 @@ export const GameField = () => {
       setCurrentCell(key);
     }
 
+    const setDifficulty = (key) => {
+      setDifficultyLevel(key);
+    }
+
+    const isDifficulty = (key) => {
+      return difficultyLevel == key ? `btn-primary` : `outline-primary`;
+    }
+
     const setCandidateInCell = (number) => {
       if(!predefinedCells.current[cellStateRef.current])
       {
@@ -153,7 +163,7 @@ export const GameField = () => {
     }
   
     const setInitialValues = () => {
-      let [startingBoard, solvedBoard] = solver.newStartingBoard();
+      let [startingBoard, solvedBoard] = solver.newStartingBoard(difficultyLevel);
       predefinedCells.current = startingBoard;
       setCandidateValues(utils.BLANK_CANDIDATE_BOARD);
       setCellValues(startingBoard);
@@ -213,6 +223,18 @@ export const GameField = () => {
         <div className="rightPanel">
           <ButtonPanel key="ButtonPanel" newGame={setInitialValues} resetGame={resetGameBoard} onCandidateClick={setCandidateInCell} onNumberClick={setNumberInCell} candidateTabActive={(active) => setCandidateTabActive(active)} />
         </div>
+        <div></div>
+        <div className="underPanel">
+          <div className="difficultyContainer alert alert-primary">
+          <div className="difficultyText">Game difficulty</div>
+          <div className="difficultyOptions">
+            <button onClick={() => setDifficulty(constants.difficulty.easy)} className={`btn ` + isDifficulty(constants.difficulty.easy)}>Easy</button>
+            <button onClick={() => setDifficulty(constants.difficulty.medium)} className={`btn ` + isDifficulty(constants.difficulty.medium)}>Medium</button>
+            <button onClick={() => setDifficulty(constants.difficulty.hard)} className={`btn ` + isDifficulty(constants.difficulty.hard)}>Hard</button>
+          </div>
+          </div>
+        </div>
+        <div></div>
       </div>
     )
   }

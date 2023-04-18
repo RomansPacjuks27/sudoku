@@ -1,3 +1,4 @@
+import * as constants from './Constants';
 import { utils, colors } from './Utils';
 
 export const solver = {
@@ -192,10 +193,10 @@ export const solver = {
   }
   },
 
-  newStartingBoard  () {
+  newStartingBoard(difficulty) {
     try {
       let solvedBoard = this.newSolvedBoard();
-      let startingBoard = this.pokeHoles(solvedBoard);
+      let startingBoard = this.pokeHoles(solvedBoard, difficulty);
       return [startingBoard, solvedBoard];
     } catch (error) {
       console.log(error);
@@ -207,20 +208,32 @@ export const solver = {
     return this.fillPuzzle(newBoard); 
   },
 
-  safeToPlace( puzzleArray, emptyCell, num) {
+  safeToPlace(puzzleArray, emptyCell, num) {
     return rowSafe(puzzleArray, emptyCell, num) && 
     colSafe(puzzleArray, emptyCell, num) && 
     boxSafe(puzzleArray, emptyCell, num) 
   },
 
-  pokeHoles(board) {
+  pokeHoles(board, difficulty) {
     let cellStats = [];
     let dummyBoard = board.slice();
 
-    let emptyHoleCoef = 20; //difficulty (5, 20, 30)
+    let searchCoef = 0.1; 
+    let emptyHoleCoef = 5; 
+    switch(difficulty) {
+      case constants.difficulty.medium:
+        emptyHoleCoef = 20;
+        searchCoef = 0.25;
+        break;
+      case constants.difficulty.hard:
+        emptyHoleCoef = 30;
+        searchCoef = 0.4;
+        break;
+      default:
+        break;
+    }
+
     let emptyHoleCount = utils.random(20 + emptyHoleCoef, 25 + emptyHoleCoef);
-    let searchCoef = 0.25; //dificulty (0.1, 0.25, 0.4)
-    
     let initialHoleCount = utils.random(8, 8); 
     let pokedIdx = utils.randomSeries(0, 80, initialHoleCount);
     pokedIdx.map(x => dummyBoard[x] = 0);

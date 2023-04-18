@@ -36,14 +36,44 @@ body {
   align-items: center;
   justify-content: center;
   margin: 50px;
-  /*border: 1px solid green;*/
+  height: 100%;
 }
 
 .gameLayout {
   display: grid;
   grid-template-columns: 33% 33% 33%;
+  grid-template-rows: auto auto;
   align-items: center;
   justify-content: center;
+}
+
+.underPanel {
+  height: 150px;
+  display: grid;
+  margin: 5%;
+}
+
+.difficultyContainer {
+  height: 100%;
+}
+
+.difficultyText {
+  text-align: center;
+  height: 40px;
+  font-size: 1.5rem;
+  margin: 0.5rem;
+}
+
+.difficultyOptions {
+  text-align: center;
+  display: flex;
+
+  button {
+    margin: 0.5rem;
+    display: inline-block;
+    text-align: center;
+    width: 33.3%;
+  }
 }
 
 .box {
